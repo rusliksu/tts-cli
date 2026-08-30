@@ -38,3 +38,11 @@ history:
 - Не публиковать пакет в PyPI и не создавать GitHub Release.
 - Не добавлять реальные сейвы, cache-файлы, URL или абсолютные локальные пути.
 - Не ослаблять branch protection и не использовать `--admin` для merge.
+
+## Результат
+
+- Public repo: `https://github.com/rusliksu/tts-cli`.
+- Основной PR смержен обычным merge commit после четырёх зелёных CI jobs.
+- Visibility равна `PUBLIC`; default branch — `main`; GitHub определяет MIT.
+- Secret scanning, push protection и private vulnerability reporting включены.
+- PyPI package и GitHub Release не создавались.
