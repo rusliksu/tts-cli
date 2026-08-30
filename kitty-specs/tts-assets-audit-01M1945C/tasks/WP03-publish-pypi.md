@@ -29,6 +29,9 @@ history:
   - timestamp: "2026-08-30T13:26:00Z"
     agent: "codex"
     action: "PyPI отклонил tts-cli как слишком похожее имя; Руслан одобрил tabletop-simulator-cli и патч-релиз 0.1.1."
+  - timestamp: "2026-08-30T13:33:00Z"
+    agent: "codex"
+    action: "Первый publish run 33314445728 остановился до OIDC и upload: для tag commit v1.14.2 не опубликован GHCR manifest. PyPI 0.1.1 остался 404; pin заменён на полный SHA release/v1 с проверенным образом."
 ---
 
 # Рабочий пакет WP03: опубликовать `tabletop-simulator-cli==0.1.1` в PyPI
