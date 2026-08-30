@@ -170,13 +170,17 @@ Python 3.12 и 3.13 под Linux и Windows. Затем создаётся publi
 
 ### Расширение: PyPI Trusted Publishing
 
-После публикации GitHub Release `v0.1.0` добавляется отдельный workflow:
+После того как PyPI отклонил короткое distribution name `tts-cli` как слишком
+похожее на существующий проект, одобрен патч-релиз `v0.1.1` с публичным именем
+`tabletop-simulator-cli`. GitHub Release `v0.1.0` остаётся неизменным.
+
+Для публикации используется отдельный workflow:
 
 1. One-shot `.github/workflows/publish-pypi.yml` запускается только вручную
    через `workflow_dispatch` без произвольных inputs.
 2. Build job получает только `contents: read`, checkout точного SHA
-   `54af70be429ea0aa49922b9984af3e099e66cd54`, проверяет, что удалённый
-   `v0.1.0` всё ещё указывает на этот SHA и `[project].version` равна `0.1.0`, запускает
+   `6b50e0007bd664e7e54f5d757f7890e729674a67`, проверяет, что удалённый
+   `v0.1.1` всё ещё указывает на этот SHA и `[project].version` равна `0.1.1`, запускает
    `uv build --no-sources`, `twine check --strict` и smoke-установку wheel.
 3. Проверенные `dist/*` передаются publish job как GitHub artifact.
 4. Publish job работает в GitHub Environment `pypi`, получает только
@@ -185,10 +189,10 @@ Python 3.12 и 3.13 под Linux и Windows. Затем создаётся publi
 5. PyPI pending publisher связывает `rusliksu/tts-cli`, workflow
    `publish-pypi.yml` и environment `pypi`; API token и repository secret не
    создаются.
-6. Первый ручной запуск публикует только `tts-cli==0.1.0` из тега `v0.1.0`.
-7. Workflow использует concurrency group `publish-pypi-0.1.0` с
+6. Первый ручной запуск публикует только `tabletop-simulator-cli==0.1.1` из тега `v0.1.1`.
+7. Workflow использует concurrency group `publish-pypi-0.1.1` с
    `cancel-in-progress: false`. Непосредственно перед OIDC upload publish job
-   требует, чтобы `tts-cli==0.1.0` ещё отсутствовал в PyPI; `skip-existing` не
+   требует, чтобы `tabletop-simulator-cli==0.1.1` ещё отсутствовал в PyPI; `skip-existing` не
    применяется, а повторная попытка завершается до upload.
 8. После публикации выполняются PyPI JSON API check и установка из production
    index в новое временное окружение.
@@ -199,11 +203,11 @@ Python 3.12 и 3.13 под Linux и Windows. Затем создаётся publi
   install smoke.
 - До dispatch: PR смержен, workflow SHA совпадает с проверенным, GitHub
   Environment и PyPI Trusted Publisher настроены с точными именами; PyPI JSON
-  API и Simple Index по-прежнему не содержат `tts-cli`.
-- После dispatch: GitHub Actions зелёный, PyPI показывает версию `0.1.0`,
+  API и Simple Index по-прежнему не содержат `tabletop-simulator-cli`.
+- После dispatch: GitHub Actions зелёный, PyPI показывает версию `0.1.1`,
   установка из production index воспроизводится.
 - Повторная публикация той же версии останавливается preflight до получения
   OIDC credential и upload; immutable-ошибка PyPI не используется как штатный
   механизм идемпотентности.
-- README, обновлённые после `v0.1.0`, не подмешиваются в long description
-  дистрибутива `0.1.0`; это осознанная цена точного воспроизведения тега.
+- README из точного тега `v0.1.1` содержит install-команды для
+  `tabletop-simulator-cli==0.1.1`.

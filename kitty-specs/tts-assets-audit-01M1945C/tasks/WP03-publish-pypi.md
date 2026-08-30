@@ -1,6 +1,6 @@
 ---
 work_package_id: "WP03"
-title: "Опубликовать tts-cli 0.1.0 в PyPI"
+title: "Опубликовать tabletop-simulator-cli 0.1.1 в PyPI"
 dependencies:
   - "WP02"
 requirement_refs:
@@ -26,29 +26,32 @@ history:
   - timestamp: "2026-08-30T12:50:00Z"
     agent: "codex"
     action: "Baseline one-shot Trusted Publishing одобрен Русланом."
+  - timestamp: "2026-08-30T13:26:00Z"
+    agent: "codex"
+    action: "PyPI отклонил tts-cli как слишком похожее имя; Руслан одобрил tabletop-simulator-cli и патч-релиз 0.1.1."
 ---
 
-# Рабочий пакет WP03: опубликовать `tts-cli==0.1.0` в PyPI
+# Рабочий пакет WP03: опубликовать `tabletop-simulator-cli==0.1.1` в PyPI
 
 ## Реализация
 
 1. Добавить pinned one-shot `.github/workflows/publish-pypi.yml` для сборки из
-   `v0.1.0` на SHA `54af70be429ea0aa49922b9984af3e099e66cd54`,
+   `v0.1.1` на SHA `6b50e0007bd664e7e54f5d757f7890e729674a67`,
    строгой проверки wheel/sdist, smoke-установки и OIDC-публикации.
 2. Обновить английский и русский README установкой через PyPI.
 3. Локально проверить tests, lint, build, metadata, состав архивов и console
    script; затем провести ветку через PR в `main`.
 4. Создать GitHub Environment `pypi` и PyPI pending Trusted Publisher с точной
    привязкой к `rusliksu/tts-cli` и publish workflow.
-5. Перед dispatch повторить проверку свободного имени, запустить workflow,
+5. Перед dispatch повторить проверку свободного имени `tabletop-simulator-cli`, запустить workflow,
    проверить PyPI API и чистую установку.
 
 ## Границы
 
 - Не создавать API token или GitHub secret для PyPI.
-- Не пересобирать пакет из плавающего `main`; источник только тег `v0.1.0`.
+- Не пересобирать пакет из плавающего `main`; источник только тег `v0.1.1`.
 - Не публиковать в TestPyPI и не менять продуктовый код аудита.
-- Не повторять dispatch после успешной публикации `0.1.0`.
+- Не повторять dispatch после успешной публикации `0.1.1`.
 - Не добавлять `release.published`, произвольный tag input или `skip-existing`;
   будущая release automation требует отдельного изменения.
 
@@ -60,10 +63,10 @@ history:
 - `uv build --no-sources`
 - `uvx --from twine twine check --strict dist/*`
 - install smoke wheel в новом временном окружении
-- remote tag `v0.1.0`, checkout и ожидаемый SHA совпадают
+- remote tag `v0.1.1`, checkout и ожидаемый SHA совпадают
 - concurrency не отменяет активный publish run; повтор блокируется preflight
 - GitHub Actions run conclusion `success`
-- `https://pypi.org/pypi/tts-cli/json` содержит версию `0.1.0`
+- `https://pypi.org/pypi/tabletop-simulator-cli/json` содержит версию `0.1.1`
 
 ## Gate
 
