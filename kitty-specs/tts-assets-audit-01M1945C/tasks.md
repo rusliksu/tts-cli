@@ -20,3 +20,12 @@ extractor и cache matcher вместе определяют наблюдаем�
 - три локальных сейва проходят read-only smoke менее чем за 10 секунд каждый;
 - GitHub remote и публикация отсутствуют.
 
+## WP02: Подготовить и опубликовать v0.1
+
+Добавить минимальные публичные metadata, MIT license и безопасный CI, повторить
+локальные проверки и privacy scan, создать public repo `rusliksu/tts-cli`,
+провести task-ветку через PR в `main` и проверить результат через GitHub API.
+
+**Готово, когда:** public `main` содержит проверенный tree, CI зелёный,
+visibility равна `PUBLIC`, license определяется как MIT, а PyPI/GitHub Release
+не создавались.

@@ -161,5 +161,9 @@ docs/codemap/
 ## Поставка
 
 Один work package реализует код, тесты, codemap и локальную acceptance-проверку.
-GitHub remote, лицензия, packaging release и публичная публикация выполняются
-отдельно после подтверждённого v0.1.
+После подтверждённого v0.1 и явного разрешения второй work package добавляет
+MIT license, `SECURITY.md`, public metadata и GitHub Actions. Actions получают
+только `contents: read`, используют полные commit SHA и запускают tests/lint на
+Python 3.12 и 3.13 под Linux и Windows. Затем создаётся public repo, task-ветка
+проходит через PR в `main`, а visibility, license, CI и итоговый tree
+проверяются через GitHub API. PyPI и GitHub Release остаются вне scope.
