@@ -3,8 +3,8 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "tts-cli"
-version = "0.1.0"
+name = "tabletop-simulator-cli"
+version = "0.1.1"
 description = "Deterministic, read-only audits for Tabletop Simulator saves"
 readme = "README.md"
 requires-python = ">=3.12"

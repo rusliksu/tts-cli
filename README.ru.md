@@ -12,14 +12,14 @@ Simulator. Стабильный JSON-отчёт предназначен для 
 опубликованной версии из PyPI:
 
 ```console
-uv tool install tts-cli==0.1.0
+uv tool install tabletop-simulator-cli==0.1.1
 tts --help
 ```
 
 Однократный запуск без постоянной установки:
 
 ```console
-uvx --from tts-cli==0.1.0 tts --help
+uvx --from tabletop-simulator-cli==0.1.1 tts --help
 ```
 
 Для разработки из исходников:
