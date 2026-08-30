@@ -3,6 +3,10 @@ work_package_id: "WP03"
 title: "Опубликовать tts-cli 0.1.0 в PyPI"
 dependencies:
   - "WP02"
+requirement_refs:
+  - "FR-011"
+  - "FR-012"
+  - "FR-013"
 planning_base_branch: "main"
 merge_target_branch: "main"
 branch_strategy: "Изменения готовятся в codex/tts-cli-pypi-publish и попадают в main только через PR."
