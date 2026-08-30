@@ -1,0 +1,19 @@
+{
+  "SaveName": "Synthetic Save",
+  "ObjectStates": [
+    {
+      "Name": "Custom_Tile",
+      "CustomImage": {
+        "ImageURL": "https://example.invalid/ugc/123/ABCDEF/"
+      }
+    },
+    {
+      "Name": "BlockSquare",
+      "ImageURL": "https://example.invalid/shared-resource"
+    },
+    {
+      "Name": "Custom_Model",
+      "MeshURL": "https://example.invalid/shared-resource"
+    }
+  ]
+}

@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/tts-cli/audit-report-v1.schema.json",
+  "title": "TTS asset audit report v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "save", "summary", "assets"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "save": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["file", "name"],
+      "properties": {
+        "file": {"type": "string"},
+        "name": {"type": "string"}
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["objects", "lua_scripts", "assets", "by_status", "by_type"],
+      "properties": {
+        "objects": {"type": "integer", "minimum": 0},
+        "lua_scripts": {"type": "integer", "minimum": 0},
+        "assets": {"type": "integer", "minimum": 0},
+        "by_status": {"$ref": "#/$defs/statusCounts"},
+        "by_type": {"$ref": "#/$defs/typeCounts"}
+      }
+    },
+    "assets": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/asset"}
+    }
+  },
+  "$defs": {
+    "assetType": {
+      "enum": ["assetbundle", "audio", "image", "model", "pdf", "unknown"]
+    },
+    "statusCounts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["cached", "not_found_in_cache", "unverified"],
+      "properties": {
+        "cached": {"type": "integer", "minimum": 0},
+        "not_found_in_cache": {"type": "integer", "minimum": 0},
+        "unverified": {"type": "integer", "minimum": 0}
+      }
+    },
+    "typeCounts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["assetbundle", "audio", "image", "model", "pdf", "unknown"],
+      "properties": {
+        "assetbundle": {"type": "integer", "minimum": 0},
+        "audio": {"type": "integer", "minimum": 0},
+        "image": {"type": "integer", "minimum": 0},
+        "model": {"type": "integer", "minimum": 0},
+        "pdf": {"type": "integer", "minimum": 0},
+        "unknown": {"type": "integer", "minimum": 0}
+      }
+    },
+    "usage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pointer", "field", "inferred_type"],
+      "properties": {
+        "pointer": {"type": "string", "pattern": "^/"},
+        "field": {"type": "string", "minLength": 1},
+        "inferred_type": {"$ref": "#/$defs/assetType"}
+      }
+    },
+    "cacheMatch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method", "confidence", "relative_path", "candidate_count"],
+      "properties": {
+        "method": {"enum": ["steam_ugc_key", "exact_normalized_name", "none", "ambiguous"]},
+        "confidence": {"enum": ["high", "medium", "none"]},
+        "relative_path": {"type": ["string", "null"]},
+        "candidate_count": {"type": "integer", "minimum": 0}
+      }
+    },
+    "asset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["url", "types", "usages", "status", "cache_match"],
+      "properties": {
+        "url": {"type": "string", "pattern": "^https?://"},
+        "types": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/assetType"}
+        },
+        "usages": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/usage"}
+        },
+        "status": {"enum": ["cached", "not_found_in_cache", "unverified"]},
+        "cache_match": {"$ref": "#/$defs/cacheMatch"}
+      }
+    }
+  }
+}

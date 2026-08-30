@@ -1,0 +1,42 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "tts-cli"
+version = "0.1.0"
+description = "Deterministic, read-only audits for Tabletop Simulator saves"
+readme = "README.md"
+requires-python = ">=3.12"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Ruslan Gayanov" }]
+dependencies = []
+
+[project.urls]
+Repository = "https://github.com/rusliksu/tts-cli"
+Issues = "https://github.com/rusliksu/tts-cli/issues"
+
+[project.scripts]
+tts = "tts_cli.cli:entrypoint"
+
+[dependency-groups]
+dev = ["pytest>=8.3"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/tts_cli"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "/src",
+  "/tests",
+  "/README.md",
+  "/README.ru.md",
+  "/LICENSE",
+  "/SECURITY.md",
+  "/pyproject.toml",
+]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]

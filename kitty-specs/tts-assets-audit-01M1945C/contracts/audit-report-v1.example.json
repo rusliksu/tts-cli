@@ -1,0 +1,73 @@
+{
+  "assets": [
+    {
+      "cache_match": {
+        "candidate_count": 2,
+        "confidence": "none",
+        "method": "ambiguous",
+        "relative_path": null
+      },
+      "status": "unverified",
+      "types": [
+        "image",
+        "model"
+      ],
+      "url": "https://example.invalid/shared-resource",
+      "usages": [
+        {
+          "field": "ImageURL",
+          "inferred_type": "image",
+          "pointer": "/ObjectStates/1/ImageURL"
+        },
+        {
+          "field": "MeshURL",
+          "inferred_type": "model",
+          "pointer": "/ObjectStates/2/MeshURL"
+        }
+      ]
+    },
+    {
+      "cache_match": {
+        "candidate_count": 1,
+        "confidence": "high",
+        "method": "steam_ugc_key",
+        "relative_path": "Images/cache-123ABCDEF.png"
+      },
+      "status": "cached",
+      "types": [
+        "image"
+      ],
+      "url": "https://example.invalid/ugc/123/ABCDEF/",
+      "usages": [
+        {
+          "field": "ImageURL",
+          "inferred_type": "image",
+          "pointer": "/ObjectStates/0/CustomImage/ImageURL"
+        }
+      ]
+    }
+  ],
+  "save": {
+    "file": "synthetic_save.json",
+    "name": "Synthetic Save"
+  },
+  "schema_version": 1,
+  "summary": {
+    "assets": 2,
+    "by_status": {
+      "cached": 1,
+      "not_found_in_cache": 0,
+      "unverified": 1
+    },
+    "by_type": {
+      "assetbundle": 0,
+      "audio": 0,
+      "image": 2,
+      "model": 1,
+      "pdf": 0,
+      "unknown": 0
+    },
+    "lua_scripts": 0,
+    "objects": 3
+  }
+}
