@@ -8,7 +8,21 @@ Simulator. Стабильный JSON-отчёт предназначен для 
 
 ## Установка
 
-Требуются Python 3.12+ и [uv](https://docs.astral.sh/uv/):
+Требуются Python 3.12+ и [uv](https://docs.astral.sh/uv/). Установка
+опубликованной версии из PyPI:
+
+```console
+uv tool install tts-cli==0.1.0
+tts --help
+```
+
+Однократный запуск без постоянной установки:
+
+```console
+uvx --from tts-cli==0.1.0 tts --help
+```
+
+Для разработки из исходников:
 
 ```console
 git clone https://github.com/rusliksu/tts-cli.git

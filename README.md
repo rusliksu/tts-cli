@@ -11,7 +11,21 @@ that need evidence without launching the game or rewriting a save.
 
 ## Install
 
-Python 3.12+ and [uv](https://docs.astral.sh/uv/) are required:
+Python 3.12+ and [uv](https://docs.astral.sh/uv/) are required. Install the
+released CLI from PyPI:
+
+```console
+uv tool install tts-cli==0.1.0
+tts --help
+```
+
+To run it once without a persistent installation:
+
+```console
+uvx --from tts-cli==0.1.0 tts --help
+```
+
+For development from source:
 
 ```console
 git clone https://github.com/rusliksu/tts-cli.git
