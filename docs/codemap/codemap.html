@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>tts-cli code map</title>
+  <style>
+    body { font: 16px/1.5 system-ui, sans-serif; margin: 2rem auto; max-width: 60rem; padding: 0 1rem; color: #1f2937; }
+    code { background: #f3f4f6; padding: .1rem .3rem; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #d1d5db; padding: .6rem; text-align: left; vertical-align: top; }
+    th { background: #f9fafb; }
+  </style>
+</head>
+<body>
+  <h1>tts-cli planned module map</h1>
+  <p><code>cli.py</code> calls the audit orchestrator and renderer. The audit
+  orchestrator combines structured extraction, cache matching, and report models.</p>
+  <table>
+    <thead><tr><th>Module</th><th>Called by</th><th>Affects</th><th>Tests</th></tr></thead>
+    <tbody>
+      <tr><td><code>cli.py</code></td><td>console script</td><td>arguments and exit codes</td><td><code>test_cli.py</code></td></tr>
+      <tr><td><code>audit.py</code></td><td><code>cli.py</code></td><td>report assembly</td><td><code>test_cli.py</code></td></tr>
+      <tr><td><code>extract.py</code></td><td><code>audit.py</code></td><td>assets and counters</td><td><code>test_extract.py</code></td></tr>
+      <tr><td><code>cache.py</code></td><td><code>audit.py</code></td><td>status and evidence</td><td><code>test_cache.py</code></td></tr>
+      <tr><td><code>models.py</code></td><td><code>audit.py</code>, <code>render.py</code></td><td>JSON contract</td><td><code>test_cli.py</code></td></tr>
+      <tr><td><code>render.py</code></td><td><code>cli.py</code></td><td>human and JSON stdout</td><td><code>test_cli.py</code></td></tr>
+    </tbody>
+  </table>
+</body>
+</html>

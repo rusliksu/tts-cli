@@ -63,37 +63,57 @@ docs/codemap/
 2. Объектом считается словарь с непустым строковым `Name`.
 3. Lua-скриптом считается непустое строковое поле `LuaScript`; его содержимое
    не сканируется.
-4. Известные поля ресурсов классифицируются таблицей имён без учёта регистра.
-5. Незнакомое поле, имя которого заканчивается на `url`, учитывается как
-   `unknown` и получает `unverified`.
+4. Известные поля классифицируются таблицей без учёта регистра:
+   - `FaceURL`, `BackURL`, `ImageURL`, `ImageSecondaryURL`, `DiffuseURL`,
+     `NormalURL`, `TableURL`, `SkyURL` -> `image`;
+   - `MeshURL`, `ColliderURL` -> `model`;
+   - `PDFUrl` -> `pdf`;
+   - `CurrentAudioURL` -> `audio`;
+   - `AssetbundleURL` -> `assetbundle`.
+5. Незнакомое поле с суффиксом `url` учитывается как `unknown`; другие строки,
+   включая Lua и `Item1`, не сканируются.
 6. Provenance хранится как RFC 6901 JSON Pointer с экранированием `~` и `/`.
+7. Один URL хранит отсортированные usages `{pointer, field, inferred_type}` и
+   отсортированный уникальный набор inferred types.
 
 ### Сопоставление кэша
 
-1. Для известного типа просматриваются только его TTS-каталоги.
-2. `exact_normalized_name`: URL и имя cache-файла сравниваются после удаления
-   всех не-ASCII букв и цифр; confidence `high`.
-3. `steam_ugc_key`: из URL извлекаются `/ugc/<id>/<hash>`, затем
-   `<id><hash>` ищется в имени cache-файла; hostname не участвует, confidence
-   `high`.
-4. Несколько совпадений сортируются по относительному пути; выбирается первое,
-   а число кандидатов остаётся в отчёте.
-5. Для известного типа без совпадения статус `not_found_in_cache`; для
-   неизвестного типа — `unverified`.
+1. Для всех известных типов usages строится объединение их TTS-каталогов;
+   `unknown` не добавляет каталогов.
+2. Сначала применяется `steam_ugc_key`: из raw URL без percent-decoding
+   извлекается case-insensitive `/ugc/<decimal-id>/<hex-hash>`. Ключ
+   `<id><uppercase-hash>` сравнивается как case-insensitive substring полного
+   имени cache-файла. Query и fragment не участвуют. Ровно один кандидат даёт
+   `cached/high`.
+3. Если URL не Steam UGC, применяется `exact_normalized_name`: из полного raw
+   URL и полного имени cache-файла удаляются символы вне `[A-Za-z0-9]`, затем
+   строки сравниваются case-insensitive. Percent-encoding, query и fragment не
+   преобразуются. Ровно один кандидат даёт `cached/medium`.
+4. Ноль кандидатов для известного типа даёт `not_found_in_cache` с
+   `method=none`, `confidence=none` и `relative_path=null`.
+5. Больше одного кандидата при любом методе даёт `unverified` с
+   `method=ambiguous`, `confidence=none`, `relative_path=null` и фактическим
+   `candidate_count`; произвольный первый файл не выбирается.
+6. Ресурс только с типом `unknown` всегда получает `unverified` без обхода всего
+   кэша.
 
 ### Детерминированность
 
-- Ресурсы сортируются по URL.
-- JSON Pointer сортируются лексикографически и дедуплицируются.
+- Ресурсы сортируются по URL, usages — по `(pointer, field, inferred_type)`.
 - Словари счётчиков сериализуются с отсортированными ключами.
 - `json.dumps(..., sort_keys=True, ensure_ascii=False, indent=2)` и один `LF` в конце.
 - В stdout нет timestamps, duration и абсолютного пути до сейва или `Mods`.
+- Cache paths используют `/` и всегда относительны к `Mods`.
+- Нормативная форма зафиксирована в `contracts/audit-report-v1.schema.json` и
+  двух golden examples.
 
 ## Определение каталога `Mods`
 
 1. Явный `--mods-dir` имеет приоритет.
 2. Иначе используется ближайший предок входного файла с именем `Mods`.
-3. Если каталог не найден или не существует, команда завершается с кодом `2`.
+3. Иначе вверх по предкам ищется первый существующий дочерний каталог `Mods`;
+   это покрывает обычный путь `Tabletop Simulator/Saves/...`.
+4. Если каталог не найден или не существует, команда завершается с кодом `2`.
 
 ## Ошибки и exit codes
 
@@ -107,11 +127,12 @@ docs/codemap/
 1. Red-first unit tests для JSON Pointer, рекурсии, дедупликации и счётчиков.
 2. Cache tests создают временные каталоги и пустые файлы с TTS-подобными
    именами; бинарные ассеты не нужны.
-3. CLI tests вызывают `main(args)` и проверяют stdout, stderr и exit code.
+3. CLI tests вызывают `main(args)` и проверяют все exit codes: полный JSON при
+   `1`, пустой stdout и короткий stderr при `2/3`, invalid `Mods` и broken JSON.
 4. Mutation check: изменить Steam UGC hash в fixture и потребовать переход
    `cached -> not_found_in_cache`.
-5. Privacy gate: поиск реальных Workshop IDs, Steam asset URL и `C:\Users` в
-   tracked diff.
+5. Privacy gate: поиск реальных Workshop IDs, Steam asset URL и `C:\Users` во
+   всём наборе tracked-файлов, а не только в текущем diff.
 6. Локальная acceptance-проверка на трёх существующих сейвах выполняется
    отдельной командой; сохраняются только агрегаты и время, не полный отчёт.
 

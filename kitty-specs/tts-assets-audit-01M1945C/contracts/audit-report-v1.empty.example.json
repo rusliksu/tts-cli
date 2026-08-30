@@ -1,0 +1,26 @@
+{
+  "assets": [],
+  "save": {
+    "file": "empty.json",
+    "name": "Empty Save"
+  },
+  "schema_version": 1,
+  "summary": {
+    "assets": 0,
+    "by_status": {
+      "cached": 0,
+      "not_found_in_cache": 0,
+      "unverified": 0
+    },
+    "by_type": {
+      "assetbundle": 0,
+      "audio": 0,
+      "image": 0,
+      "model": 0,
+      "pdf": 0,
+      "unknown": 0
+    },
+    "lua_scripts": 0,
+    "objects": 0
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "status": "planned",
+  "entrypoints": [
+    {
+      "module": "src/tts_cli/cli.py",
+      "calls": ["src/tts_cli/audit.py", "src/tts_cli/render.py"],
+      "covered_by": ["tests/test_cli.py"]
+    }
+  ],
+  "modules": [
+    {
+      "path": "src/tts_cli/audit.py",
+      "called_by": ["src/tts_cli/cli.py"],
+      "affects": [
+        "src/tts_cli/extract.py",
+        "src/tts_cli/cache.py",
+        "src/tts_cli/models.py"
+      ],
+      "covered_by": ["tests/test_cli.py"]
+    },
+    {
+      "path": "src/tts_cli/extract.py",
+      "called_by": ["src/tts_cli/audit.py"],
+      "affects": ["report assets", "report object and Lua counts"],
+      "covered_by": ["tests/test_extract.py"]
+    },
+    {
+      "path": "src/tts_cli/cache.py",
+      "called_by": ["src/tts_cli/audit.py"],
+      "affects": ["asset status", "cache match evidence"],
+      "covered_by": ["tests/test_cache.py"]
+    },
+    {
+      "path": "src/tts_cli/models.py",
+      "called_by": ["src/tts_cli/audit.py", "src/tts_cli/render.py"],
+      "affects": ["audit-report-v1 contract"],
+      "covered_by": ["tests/test_cli.py"]
+    },
+    {
+      "path": "src/tts_cli/render.py",
+      "called_by": ["src/tts_cli/cli.py"],
+      "affects": ["JSON stdout", "human stdout"],
+      "covered_by": ["tests/test_cli.py"]
+    }
+  ]
+}
+
