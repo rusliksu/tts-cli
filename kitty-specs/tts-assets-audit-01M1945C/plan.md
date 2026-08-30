@@ -1,0 +1,141 @@
+# План реализации: аудит ресурсов TTS-сейва
+
+## Контекст
+
+Новый Python CLI без существующего продуктового кода. Пилот читает один JSON-сейв
+Tabletop Simulator и локальный каталог `Mods`, не выполняет сеть и не изменяет
+входные данные. Реальные Workshop-сейвы используются только для локальной
+acceptance-проверки и не копируются в репозиторий.
+
+## Технический контекст
+
+- Python 3.12+.
+- Runtime-зависимости отсутствуют.
+- CLI: `argparse`, console script `tts`.
+- Тесты: `pytest` как dev dependency.
+- Формат входа: UTF-8 JSON, загруженный стандартным `json`.
+- Формат машинного выхода: JSON schema version `1`.
+- Целевые платформы пилота: Windows; структура ядра не должна блокировать Linux/macOS.
+
+## Архитектура
+
+```text
+CLI arguments
+    -> load save JSON
+    -> recursive structured-reference extractor
+    -> cache index + deterministic matcher
+    -> AuditReport
+    -> JSON renderer | human summary renderer
+```
+
+### Модули
+
+```text
+src/tts_cli/
+  __init__.py       package version
+  __main__.py       python -m tts_cli
+  cli.py            argparse, stderr и exit codes
+  audit.py          orchestration и сводные счётчики
+  extract.py        рекурсивный обход и JSON Pointer provenance
+  cache.py          каталогизация кэша и правила сопоставления
+  models.py         frozen dataclasses и сериализация отчёта
+  render.py         deterministic JSON и human summary
+tests/
+  fixtures/         только синтетические JSON
+  test_extract.py
+  test_cache.py
+  test_cli.py
+docs/codemap/
+  codemap.json
+  codemap.html
+  codemap.lock
+```
+
+Разделение сохраняет чистое ядро без I/O в extractor/models и позволяет
+проверять cache matching независимо от CLI. Дополнительные service/repository
+слои для однокомандного инструмента не вводятся.
+
+## Контракты
+
+### Извлечение ссылок
+
+1. Рекурсивно обходятся все словари и массивы.
+2. Объектом считается словарь с непустым строковым `Name`.
+3. Lua-скриптом считается непустое строковое поле `LuaScript`; его содержимое
+   не сканируется.
+4. Известные поля ресурсов классифицируются таблицей имён без учёта регистра.
+5. Незнакомое поле, имя которого заканчивается на `url`, учитывается как
+   `unknown` и получает `unverified`.
+6. Provenance хранится как RFC 6901 JSON Pointer с экранированием `~` и `/`.
+
+### Сопоставление кэша
+
+1. Для известного типа просматриваются только его TTS-каталоги.
+2. `exact_normalized_name`: URL и имя cache-файла сравниваются после удаления
+   всех не-ASCII букв и цифр; confidence `high`.
+3. `steam_ugc_key`: из URL извлекаются `/ugc/<id>/<hash>`, затем
+   `<id><hash>` ищется в имени cache-файла; hostname не участвует, confidence
+   `high`.
+4. Несколько совпадений сортируются по относительному пути; выбирается первое,
+   а число кандидатов остаётся в отчёте.
+5. Для известного типа без совпадения статус `not_found_in_cache`; для
+   неизвестного типа — `unverified`.
+
+### Детерминированность
+
+- Ресурсы сортируются по URL.
+- JSON Pointer сортируются лексикографически и дедуплицируются.
+- Словари счётчиков сериализуются с отсортированными ключами.
+- `json.dumps(..., sort_keys=True, ensure_ascii=False, indent=2)` и один `LF` в конце.
+- В stdout нет timestamps, duration и абсолютного пути до сейва или `Mods`.
+
+## Определение каталога `Mods`
+
+1. Явный `--mods-dir` имеет приоритет.
+2. Иначе используется ближайший предок входного файла с именем `Mods`.
+3. Если каталог не найден или не существует, команда завершается с кодом `2`.
+
+## Ошибки и exit codes
+
+- `0`: аудит выполнен, findings нет.
+- `1`: аудит выполнен, есть `not_found_in_cache` или `unverified`.
+- `2`: ожидаемая пользовательская ошибка чтения, JSON или конфигурации.
+- `3`: неожиданная ошибка; короткое сообщение без traceback по умолчанию.
+
+## Тестовая стратегия
+
+1. Red-first unit tests для JSON Pointer, рекурсии, дедупликации и счётчиков.
+2. Cache tests создают временные каталоги и пустые файлы с TTS-подобными
+   именами; бинарные ассеты не нужны.
+3. CLI tests вызывают `main(args)` и проверяют stdout, stderr и exit code.
+4. Mutation check: изменить Steam UGC hash в fixture и потребовать переход
+   `cached -> not_found_in_cache`.
+5. Privacy gate: поиск реальных Workshop IDs, Steam asset URL и `C:\Users` в
+   tracked diff.
+6. Локальная acceptance-проверка на трёх существующих сейвах выполняется
+   отдельной командой; сохраняются только агрегаты и время, не полный отчёт.
+
+## Карта кода
+
+До первого изменения продуктового модуля создаются `docs/codemap/codemap.json`,
+`codemap.html` и `codemap.lock`. Карта должна отвечать:
+
+- `cli.py` вызывает `audit.py` и renderer;
+- `audit.py` затрагивает extractor, cache matcher и models;
+- покрытие обеспечивают `test_extract.py`, `test_cache.py`, `test_cli.py`.
+
+## Риски
+
+- TTS меняет hostname Steam Cloud: снижено использованием UGC key.
+- Cache naming не документирован полностью: каждый match содержит метод и
+  confidence; отсутствие совпадения не объявляется сетевой поломкой.
+- Большие сейвы создают память-пропорциональную структуру JSON: для v0.1
+  допустимо при критерии менее 10 МБ и 10 секунд.
+- Публичный repo может случайно утечь реальные данные: публикация отделена от
+  v0.1 и требует privacy scan.
+
+## Поставка
+
+Один work package реализует код, тесты, codemap и локальную acceptance-проверку.
+GitHub remote, лицензия, packaging release и публичная публикация выполняются
+отдельно после подтверждённого v0.1.
