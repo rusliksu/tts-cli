@@ -167,3 +167,43 @@ MIT license, `SECURITY.md`, public metadata и GitHub Actions. Actions полу�
 Python 3.12 и 3.13 под Linux и Windows. Затем создаётся public repo, task-ветка
 проходит через PR в `main`, а visibility, license, CI и итоговый tree
 проверяются через GitHub API. PyPI и GitHub Release остаются вне scope.
+
+### Расширение: PyPI Trusted Publishing
+
+После публикации GitHub Release `v0.1.0` добавляется отдельный workflow:
+
+1. One-shot `.github/workflows/publish-pypi.yml` запускается только вручную
+   через `workflow_dispatch` без произвольных inputs.
+2. Build job получает только `contents: read`, checkout точного SHA
+   `54af70be429ea0aa49922b9984af3e099e66cd54`, проверяет, что удалённый
+   `v0.1.0` всё ещё указывает на этот SHA и `[project].version` равна `0.1.0`, запускает
+   `uv build --no-sources`, `twine check --strict` и smoke-установку wheel.
+3. Проверенные `dist/*` передаются publish job как GitHub artifact.
+4. Publish job работает в GitHub Environment `pypi`, получает только
+   `id-token: write` и вызывает закреплённый SHA официального
+   `pypa/gh-action-pypi-publish`.
+5. PyPI pending publisher связывает `rusliksu/tts-cli`, workflow
+   `publish-pypi.yml` и environment `pypi`; API token и repository secret не
+   создаются.
+6. Первый ручной запуск публикует только `tts-cli==0.1.0` из тега `v0.1.0`.
+7. Workflow использует concurrency group `publish-pypi-0.1.0` с
+   `cancel-in-progress: false`. Непосредственно перед OIDC upload publish job
+   требует, чтобы `tts-cli==0.1.0` ещё отсутствовал в PyPI; `skip-existing` не
+   применяется, а повторная попытка завершается до upload.
+8. После публикации выполняются PyPI JSON API check и установка из production
+   index в новое временное окружение.
+
+### Gate публикации
+
+- До PR: tests, lint, build, `twine check --strict`, проверка состава архивов и
+  install smoke.
+- До dispatch: PR смержен, workflow SHA совпадает с проверенным, GitHub
+  Environment и PyPI Trusted Publisher настроены с точными именами; PyPI JSON
+  API и Simple Index по-прежнему не содержат `tts-cli`.
+- После dispatch: GitHub Actions зелёный, PyPI показывает версию `0.1.0`,
+  установка из production index воспроизводится.
+- Повторная публикация той же версии останавливается preflight до получения
+  OIDC credential и upload; immutable-ошибка PyPI не используется как штатный
+  механизм идемпотентности.
+- README, обновлённые после `v0.1.0`, не подмешиваются в long description
+  дистрибутива `0.1.0`; это осознанная цена точного воспроизведения тега.

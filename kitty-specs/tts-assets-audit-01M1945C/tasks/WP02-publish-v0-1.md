@@ -3,6 +3,8 @@ work_package_id: "WP02"
 title: "Подготовить и опубликовать v0.1"
 dependencies:
   - "WP01"
+requirement_refs:
+  - "FR-010"
 planning_base_branch: "codex/tts-assets-audit"
 merge_target_branch: "main"
 branch_strategy: "Публичные metadata добавляются в task-owned ветке и интегрируются в main только через GitHub PR."

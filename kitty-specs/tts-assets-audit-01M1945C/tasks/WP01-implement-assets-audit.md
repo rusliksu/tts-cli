@@ -2,6 +2,16 @@
 work_package_id: "WP01"
 title: "Реализовать и проверить пилот"
 dependencies: []
+requirement_refs:
+  - "FR-001"
+  - "FR-002"
+  - "FR-003"
+  - "FR-004"
+  - "FR-005"
+  - "FR-006"
+  - "FR-007"
+  - "FR-008"
+  - "FR-009"
 planning_base_branch: "codex/tts-assets-audit"
 merge_target_branch: "codex/tts-assets-audit"
 branch_strategy: "Артефакты планирования и реализация остаются в task-owned ветке codex/tts-assets-audit."

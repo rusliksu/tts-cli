@@ -29,3 +29,15 @@ extractor и cache matcher вместе определяют наблюдаем�
 **Готово, когда:** public `main` содержит проверенный tree, CI зелёный,
 visibility равна `PUBLIC`, license определяется как MIT, а PyPI/GitHub Release
 не создавались.
+
+## WP03: Опубликовать `tts-cli==0.1.0` в PyPI
+
+Добавить минимальный one-shot Trusted Publishing workflow, инструкции установки и
+проверки дистрибутивов. Провести изменения через task-owned PR, привязать
+production PyPI publisher без токена, вручную запустить workflow для
+существующего тега `v0.1.0` и проверить установку из PyPI.
+
+**Готово, когда:** production PyPI возвращает `tts-cli==0.1.0`, workflow
+успешен, а чистая установка предоставляет рабочую команду `tts`. Workflow
+собирает только `v0.1.0` на точном SHA `54af70b` и не создаёт автоматический
+publish surface для следующих релизов.
