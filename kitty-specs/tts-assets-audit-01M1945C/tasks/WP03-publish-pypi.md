@@ -15,7 +15,7 @@ subtasks:
   - "T011"
   - "T012"
   - "T013"
-phase: "PyPI Trusted Publishing"
+phase: "Done"
 assignee: ""
 agent: "codex"
 shell_pid: ""
@@ -32,6 +32,9 @@ history:
   - timestamp: "2026-08-30T13:33:00Z"
     agent: "codex"
     action: "Первый publish run 33314445728 остановился до OIDC и upload: для tag commit v1.14.2 не опубликован GHCR manifest. PyPI 0.1.1 остался 404; pin заменён на полный SHA release/v1 с проверенным образом."
+  - timestamp: "2026-08-30T13:36:00Z"
+    agent: "codex"
+    action: "Run 33314605346 успешно опубликовал tabletop-simulator-cli 0.1.1 через OIDC; production install и synthetic audit smoke прошли."
 ---
 
 # Рабочий пакет WP03: опубликовать `tabletop-simulator-cli==0.1.1` в PyPI
@@ -75,3 +78,14 @@ history:
 
 Материальное расширение scope подтверждено. Фактическая публикация разрешена,
 но выполняется только после успешных локальных, PR и Trusted Publisher проверок.
+
+## Результат
+
+- GitHub Actions run `33314605346`: `success` для build и publish jobs.
+- PyPI: `https://pypi.org/project/tabletop-simulator-cli/0.1.1/`.
+- Опубликованы wheel и sdist версии `0.1.1`, оба не yanked.
+- Чистая установка из production Simple Index предоставляет `tts --help`.
+- Аудит синтетического пустого сейва с пустым `Mods` вернул контрактный JSON
+  и код `0`.
+- Публикация использовала GitHub OIDC; API token и repository secret не
+  создавались.
