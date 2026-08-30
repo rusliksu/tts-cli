@@ -1,44 +1,62 @@
 # tts-cli
 
-`tts-cli` — read-only CLI для проверки сейвов и локального кэша
-Tabletop Simulator. Основной потребитель — человек или AI-агент, которому нужен
-стабильный машинно-читаемый отчёт без запуска игры и ручного обхода объектов.
+[![CI](https://github.com/rusliksu/tts-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/rusliksu/tts-cli/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-## Статус
+Deterministic, read-only audits for Tabletop Simulator save files and the local
+asset cache. The JSON output is designed for AI agents, CI jobs, and scripts
+that need evidence without launching the game or rewriting a save.
 
-Локальный пилот v0.1 реализует одну команду. GitHub remote, лицензия и публичный
-release будут добавлены только после отдельной проверки v0.1.
+[Русская версия](README.ru.md)
 
-## Установка для разработки
+## Install
 
-Требуются Python 3.12+ и `uv`:
+Python 3.12+ and [uv](https://docs.astral.sh/uv/) are required:
 
-```text
-uv sync
-uv run tts --help
+```console
+git clone https://github.com/rusliksu/tts-cli.git
+cd tts-cli
+uv sync --locked
 ```
 
-## Первый сценарий
+## Audit a save
 
-```text
-tts assets audit <save.json> [--mods-dir <path>] [--json]
+```console
+uv run tts assets audit <save.json> [--mods-dir <path>] [--json]
 ```
 
-Команда находит структурированные ссылки на изображения, модели, PDF,
-аудио и asset bundles, сопоставляет их с кэшем TTS и возвращает доказуемый статус
-для каждого ресурса.
+Without `--mods-dir`, the CLI looks for the nearest `Mods` directory or a
+`Mods` directory next to `Saves`.
 
-Без `--mods-dir` CLI ищет ближайший `Mods` в пути сейва, затем соседний `Mods`
-рядом с `Saves`. Код `0` означает отсутствие findings, `1` — полный отчёт с
-`not_found_in_cache` или `unverified`, `2` — ошибку входа, `3` — внутреннюю
-ошибку.
+Exit codes:
 
-## Границы безопасности
+- `0`: audit completed with no findings;
+- `1`: full report produced with `not_found_in_cache` or `unverified` assets;
+- `2`: invalid input or local configuration;
+- `3`: unexpected internal error.
 
-- Только чтение по умолчанию.
-- Никаких скачиваний, удаления кэша и изменения сейвов в пилоте.
-- `not_found_in_cache` не означает, что внешний URL сломан.
-- Реальные Workshop-сейвы и игровые ассеты не входят в репозиторий.
+`not_found_in_cache` only means that the deterministic local rules did not find
+a matching file. It does not mean that the remote URL is unavailable.
 
-Исследование аналогов: [docs/research/existing-tools.md](docs/research/existing-tools.md).
-Контракт пилота: [docs/pilot-baseline.md](docs/pilot-baseline.md).
+## Safety boundaries
+
+- No network requests during an audit.
+- No downloads, cache deletion, URL replacement, or save-file mutation.
+- Lua source and arbitrary text are not scanned for URLs.
+- Real Workshop saves and game assets are not included in this repository.
+
+The machine-readable contract is documented in
+[`audit-report-v1.schema.json`](kitty-specs/tts-assets-audit-01M1945C/contracts/audit-report-v1.schema.json).
+
+## Development
+
+```console
+uv sync --locked
+uv run pytest
+uv run --with ruff==0.16.5 ruff check src tests
+uv run --with ruff==0.16.5 ruff format --check src tests
+uv build
+```
+
+See the [pilot contract](docs/pilot-baseline.md) and
+[comparison with existing tools](docs/research/existing-tools.md).

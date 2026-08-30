@@ -38,11 +38,17 @@
 .kittify/workspaces/
 kitty-ops/ops-index.jsonl
 
-# Local Beads embedded database and locks are not Git files.
-.beads/embeddeddolt/
+# Local governance state is not part of the public package.
+.beads/
+.kittify/
+.claudeignore
+AGENTS.md
 
 # Python build and test output.
 .venv/
 __pycache__/
 *.py[cod]
 .pytest_cache/
+dist/
+build/
+*.egg-info/
