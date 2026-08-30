@@ -58,8 +58,8 @@ Lua-скриптов, ресурсов, типов и статусов.
 
 ### Сценарий 4 — Установить проверенный релиз из PyPI (P1)
 
-Пользователь устанавливает `tts-cli==0.1.0` из production PyPI и получает тот
-же CLI, который опубликован GitHub-тегом `v0.1.0`.
+Пользователь устанавливает `tabletop-simulator-cli==0.1.1` из production PyPI
+и получает тот же CLI, который опубликован GitHub-тегом `v0.1.1`.
 
 **Почему P1**: установка из package index устраняет необходимость клонировать
 репозиторий и делает CLI пригодным для агентов и автоматизации.
@@ -69,9 +69,9 @@ Lua-скриптов, ресурсов, типов и статусов.
 
 **Приёмочные сценарии**:
 
-1. **Дано** GitHub-тег `v0.1.0`, **когда** publish workflow собирает пакет, **тогда** тег и checkout указывают на `54af70be429ea0aa49922b9984af3e099e66cd54`, версия в `pyproject.toml` равна `0.1.0`, а wheel и sdist проходят `twine check --strict`.
-2. **Дано** привязанный PyPI Trusted Publisher, **когда** разрешённый workflow запускается для `v0.1.0`, **тогда** пакет публикуется через OIDC без API-токена.
-3. **Дано** опубликованный `tts-cli==0.1.0`, **когда** пакет ставится из production PyPI в чистое окружение, **тогда** console script `tts` доступен и выполняет read-only аудит.
+1. **Дано** GitHub-тег `v0.1.1`, **когда** publish workflow собирает пакет, **тогда** тег и checkout указывают на `6b50e0007bd664e7e54f5d757f7890e729674a67`, версия в `pyproject.toml` равна `0.1.1`, а wheel и sdist проходят `twine check --strict`.
+2. **Дано** привязанный PyPI Trusted Publisher, **когда** разрешённый workflow запускается для `v0.1.1`, **тогда** пакет публикуется через OIDC без API-токена.
+3. **Дано** опубликованный `tabletop-simulator-cli==0.1.1`, **когда** пакет ставится из production PyPI в чистое окружение, **тогда** console script `tts` доступен и выполняет read-only аудит.
 
 ### Граничные случаи
 
@@ -100,8 +100,8 @@ Lua-скриптов, ресурсов, типов и статусов.
 | FR-008 | Exit codes: `0` без findings, `1` с findings, `2` input/config error, `3` неожиданная внутренняя ошибка. | High | Done |
 | FR-009 | Сводка содержит имя сейва, число объектов, непустых Lua-скриптов, ресурсов и счётчики по типам/статусам. | Medium | Done |
 | FR-010 | Публичный GitHub-репозиторий содержит MIT license, security policy, воспроизводимую установку и CI для Python 3.12 и 3.13. | High | Done |
-| FR-011 | One-shot GitHub Actions workflow собирает wheel и sdist строго из `v0.1.0` / `54af70be429ea0aa49922b9984af3e099e66cd54` и проверяет версию `0.1.0`. | High | Approved |
-| FR-012 | Production PyPI получает `tts-cli==0.1.0` через Trusted Publishing (OIDC) без сохранённых API-токенов. | High | Approved |
+| FR-011 | One-shot GitHub Actions workflow собирает wheel и sdist строго из `v0.1.1` / `6b50e0007bd664e7e54f5d757f7890e729674a67` и проверяет версию `0.1.1`. | High | Approved |
+| FR-012 | Production PyPI получает `tabletop-simulator-cli==0.1.1` через Trusted Publishing (OIDC) без сохранённых API-токенов. | High | Approved |
 | FR-013 | README на русском и английском документирует установку CLI из PyPI. | Medium | Approved |
 
 ### Нефункциональные требования
@@ -116,7 +116,7 @@ Lua-скриптов, ресурсов, типов и статусов.
 | NFR-006 | GitHub Actions используют минимальные permissions и pinned full-length commit SHA. | Безопасность | High | Done |
 | NFR-007 | Только publish job получает `id-token: write`; остальные jobs имеют не более `contents: read`. | Безопасность | High | Approved |
 | NFR-008 | Wheel и sdist проходят строгую metadata-проверку и установочный smoke до публикации. | Надёжность | High | Approved |
-| NFR-009 | Workflow сериализует попытки публикации `0.1.0`, не отменяет активный run и прекращает повторный upload, если версия уже появилась в PyPI. | Надёжность | High | Approved |
+| NFR-009 | Workflow сериализует попытки публикации `0.1.1`, не отменяет активный run и прекращает повторный upload, если версия уже появилась в PyPI. | Надёжность | High | Approved |
 
 ### Ограничения
 
@@ -127,9 +127,9 @@ Lua-скриптов, ресурсов, типов и статусов.
 | C-003 | URL внутри Lua и произвольного текста не извлекаются в пилоте. | Scope | High | Accepted |
 | C-004 | Реализация независима от GPL-3.0 проектов-аналогов и опирается на публичный формат TTS. | Лицензирование | High | Accepted |
 | C-005 | GitHub remote и публичная лицензия добавляются только после подтверждённого v0.1 и явного разрешения на публикацию. | Поставка | High | Satisfied |
-| C-006 | Источником первой PyPI-публикации является существующий тег `v0.1.0`; продуктовый код после тега в пакет не подмешивается. | Поставка | High | Accepted |
+| C-006 | Источником первой PyPI-публикации является новый патч-тег `v0.1.1`; GitHub Release `v0.1.0` и его тег не переписываются. | Поставка | High | Accepted |
 | C-007 | TestPyPI, API-токены, подпись локальным ключом, бинарные release assets и автоматическая публикация будущих релизов остаются вне scope. | Scope | Medium | Accepted |
-| C-008 | PyPI long description для `0.1.0` берётся из неизменяемого тега и сохраняет исходную clone-инструкцию; обновлённые PyPI-инструкции README живут в `main` и не подмешиваются в архив. | Поставка | Medium | Accepted |
+| C-008 | PyPI отклонил distribution name `tts-cli` как слишком похожее на существующий проект; одобренное публичное имя — `tabletop-simulator-cli`, команда остаётся `tts`. | Поставка | High | Accepted |
 
 ### Основные сущности
 
@@ -147,4 +147,4 @@ Lua-скриптов, ресурсов, типов и статусов.
 - **SC-005**: privacy scan всего набора tracked-файлов не находит реальных Workshop IDs, Steam asset URL или абсолютных пользовательских путей.
 - **SC-006**: golden tests покрывают пустой отчёт, смешанные usages одного URL, неоднозначный cache match и все exit codes `0/1/2/3`.
 - **SC-007**: публичный `main` соответствует проверенному task head, CI зелёный, visibility равна `PUBLIC`, license определяется как MIT.
-- **SC-008**: PyPI JSON API возвращает `tts-cli` версии `0.1.0`, а установка из production index в чистое окружение проходит smoke.
+- **SC-008**: PyPI JSON API возвращает `tabletop-simulator-cli` версии `0.1.1`, а установка из production index в чистое окружение проходит smoke.

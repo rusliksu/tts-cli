@@ -1,4 +1,4 @@
-name: Publish tts-cli 0.1.0 to PyPI
+name: Publish tabletop-simulator-cli 0.1.1 to PyPI
 
 on:
   workflow_dispatch:
@@ -7,13 +7,14 @@ permissions:
   contents: read
 
 concurrency:
-  group: publish-pypi-0.1.0
+  group: publish-pypi-0.1.1
   cancel-in-progress: false
 
 env:
-  RELEASE_TAG: v0.1.0
-  RELEASE_SHA: 54af70be429ea0aa49922b9984af3e099e66cd54
-  PACKAGE_VERSION: 0.1.0
+  RELEASE_TAG: v0.1.1
+  RELEASE_SHA: 6b50e0007bd664e7e54f5d757f7890e729674a67
+  PACKAGE_NAME: tabletop-simulator-cli
+  PACKAGE_VERSION: 0.1.1
 
 jobs:
   build:
@@ -60,7 +61,7 @@ jobs:
         run: |
           set -euo pipefail
           uv venv --seed .smoke
-          uv pip install --python .smoke/bin/python --no-index --find-links dist "tts-cli==${PACKAGE_VERSION}"
+          uv pip install --python .smoke/bin/python --no-index --find-links dist "${PACKAGE_NAME}==${PACKAGE_VERSION}"
           .smoke/bin/tts --help
 
       - name: Upload verified distributions
@@ -77,7 +78,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/tts-cli
+      url: https://pypi.org/p/tabletop-simulator-cli
     permissions:
       id-token: write
 
@@ -92,8 +93,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          project_status="$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' 'https://pypi.org/pypi/tts-cli/json')"
-          version_status="$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' 'https://pypi.org/pypi/tts-cli/0.1.0/json')"
+          project_status="$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' 'https://pypi.org/pypi/tabletop-simulator-cli/json')"
+          version_status="$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' 'https://pypi.org/pypi/tabletop-simulator-cli/0.1.1/json')"
           test "${project_status}" = "404"
           test "${version_status}" = "404"
 

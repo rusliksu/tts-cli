@@ -64,8 +64,8 @@ wheels = [
 ]
 
 [[package]]
-name = "tts-cli"
-version = "0.1.0"
+name = "tabletop-simulator-cli"
+version = "0.1.1"
 source = { editable = "." }
 
 [package.dev-dependencies]

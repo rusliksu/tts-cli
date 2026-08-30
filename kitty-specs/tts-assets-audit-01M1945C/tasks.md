@@ -30,14 +30,15 @@ extractor и cache matcher вместе определяют наблюдаем�
 visibility равна `PUBLIC`, license определяется как MIT, а PyPI/GitHub Release
 не создавались.
 
-## WP03: Опубликовать `tts-cli==0.1.0` в PyPI
+## WP03: Опубликовать `tabletop-simulator-cli==0.1.1` в PyPI
 
 Добавить минимальный one-shot Trusted Publishing workflow, инструкции установки и
 проверки дистрибутивов. Провести изменения через task-owned PR, привязать
-production PyPI publisher без токена, вручную запустить workflow для
-существующего тега `v0.1.0` и проверить установку из PyPI.
+production PyPI publisher без токена, вручную запустить workflow для нового
+патч-релиза `v0.1.1` и проверить установку из PyPI. Исходное distribution name
+`tts-cli` отклонено PyPI как слишком похожее на существующий проект.
 
-**Готово, когда:** production PyPI возвращает `tts-cli==0.1.0`, workflow
+**Готово, когда:** production PyPI возвращает `tabletop-simulator-cli==0.1.1`, workflow
 успешен, а чистая установка предоставляет рабочую команду `tts`. Workflow
-собирает только `v0.1.0` на точном SHA `54af70b` и не создаёт автоматический
+собирает только `v0.1.1` на точном SHA `6b50e00` и не создаёт автоматический
 publish surface для следующих релизов.
