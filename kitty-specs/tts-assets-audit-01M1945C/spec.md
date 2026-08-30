@@ -100,9 +100,9 @@ Lua-скриптов, ресурсов, типов и статусов.
 | FR-008 | Exit codes: `0` без findings, `1` с findings, `2` input/config error, `3` неожиданная внутренняя ошибка. | High | Done |
 | FR-009 | Сводка содержит имя сейва, число объектов, непустых Lua-скриптов, ресурсов и счётчики по типам/статусам. | Medium | Done |
 | FR-010 | Публичный GitHub-репозиторий содержит MIT license, security policy, воспроизводимую установку и CI для Python 3.12 и 3.13. | High | Done |
-| FR-011 | One-shot GitHub Actions workflow собирает wheel и sdist строго из `v0.1.1` / `6b50e0007bd664e7e54f5d757f7890e729674a67` и проверяет версию `0.1.1`. | High | Approved |
-| FR-012 | Production PyPI получает `tabletop-simulator-cli==0.1.1` через Trusted Publishing (OIDC) без сохранённых API-токенов. | High | Approved |
-| FR-013 | README на русском и английском документирует установку CLI из PyPI. | Medium | Approved |
+| FR-011 | One-shot GitHub Actions workflow собирает wheel и sdist строго из `v0.1.1` / `6b50e0007bd664e7e54f5d757f7890e729674a67` и проверяет версию `0.1.1`. | High | Done |
+| FR-012 | Production PyPI получает `tabletop-simulator-cli==0.1.1` через Trusted Publishing (OIDC) без сохранённых API-токенов. | High | Done |
+| FR-013 | README на русском и английском документирует установку CLI из PyPI. | Medium | Done |
 
 ### Нефункциональные требования
 
@@ -114,9 +114,9 @@ Lua-скриптов, ресурсов, типов и статусов.
 | NFR-004 | Ядро использует Python 3.12+ и стандартную библиотеку; тестовая зависимость — только `pytest`. | Сопровождение | Medium | Done |
 | NFR-005 | Реальные сейвы, ассеты, внешние URL и абсолютные пользовательские пути отсутствуют в Git. | Приватность | High | Done |
 | NFR-006 | GitHub Actions используют минимальные permissions и pinned full-length commit SHA. | Безопасность | High | Done |
-| NFR-007 | Только publish job получает `id-token: write`; остальные jobs имеют не более `contents: read`. | Безопасность | High | Approved |
-| NFR-008 | Wheel и sdist проходят строгую metadata-проверку и установочный smoke до публикации. | Надёжность | High | Approved |
-| NFR-009 | Workflow сериализует попытки публикации `0.1.1`, не отменяет активный run и прекращает повторный upload, если версия уже появилась в PyPI. | Надёжность | High | Approved |
+| NFR-007 | Только publish job получает `id-token: write`; остальные jobs имеют не более `contents: read`. | Безопасность | High | Done |
+| NFR-008 | Wheel и sdist проходят строгую metadata-проверку и установочный smoke до публикации. | Надёжность | High | Done |
+| NFR-009 | Workflow сериализует попытки публикации `0.1.1`, не отменяет активный run и прекращает повторный upload, если версия уже появилась в PyPI. | Надёжность | High | Done |
 
 ### Ограничения
 
