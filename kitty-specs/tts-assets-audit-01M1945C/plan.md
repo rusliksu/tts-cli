@@ -78,23 +78,26 @@ docs/codemap/
 
 ### Сопоставление кэша
 
-1. Для всех известных типов usages строится объединение их TTS-каталогов;
+1. Пилот индексирует канонические cooked-каталоги `Images`, `Models`, `PDF`,
+   `Audio`, `Assetbundles`; парные каталоги `* Raw` не участвуют, чтобы две
+   формы одного локального ресурса не создавали ложную ambiguity.
+2. Для всех известных типов usages строится объединение их TTS-каталогов;
    `unknown` не добавляет каталогов.
-2. Сначала применяется `steam_ugc_key`: из raw URL без percent-decoding
+3. Сначала применяется `steam_ugc_key`: из raw URL без percent-decoding
    извлекается case-insensitive `/ugc/<decimal-id>/<hex-hash>`. Ключ
    `<id><uppercase-hash>` сравнивается как case-insensitive substring полного
    имени cache-файла. Query и fragment не участвуют. Ровно один кандидат даёт
    `cached/high`.
-3. Если URL не Steam UGC, применяется `exact_normalized_name`: из полного raw
+4. Если URL не Steam UGC, применяется `exact_normalized_name`: из полного raw
    URL и полного имени cache-файла удаляются символы вне `[A-Za-z0-9]`, затем
    строки сравниваются case-insensitive. Percent-encoding, query и fragment не
    преобразуются. Ровно один кандидат даёт `cached/medium`.
-4. Ноль кандидатов для известного типа даёт `not_found_in_cache` с
+5. Ноль кандидатов для известного типа даёт `not_found_in_cache` с
    `method=none`, `confidence=none` и `relative_path=null`.
-5. Больше одного кандидата при любом методе даёт `unverified` с
+6. Больше одного кандидата при любом методе даёт `unverified` с
    `method=ambiguous`, `confidence=none`, `relative_path=null` и фактическим
    `candidate_count`; произвольный первый файл не выбирается.
-6. Ресурс только с типом `unknown` всегда получает `unverified` без обхода всего
+7. Ресурс только с типом `unknown` всегда получает `unverified` без обхода всего
    кэша.
 
 ### Детерминированность

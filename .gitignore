@@ -40,3 +40,9 @@ kitty-ops/ops-index.jsonl
 
 # Local Beads embedded database and locks are not Git files.
 .beads/embeddeddolt/
+
+# Python build and test output.
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/

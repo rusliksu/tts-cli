@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "status": "planned",
+  "status": "implemented",
   "entrypoints": [
     {
       "module": "src/tts_cli/cli.py",
@@ -45,4 +45,3 @@
     }
   ]
 }
-

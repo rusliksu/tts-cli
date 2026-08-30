@@ -2,26 +2,6 @@
   "assets": [
     {
       "cache_match": {
-        "candidate_count": 1,
-        "confidence": "high",
-        "method": "steam_ugc_key",
-        "relative_path": "Images/cache-123ABCDEF.png"
-      },
-      "status": "cached",
-      "types": [
-        "image"
-      ],
-      "url": "https://example.invalid/ugc/123/ABCDEF/",
-      "usages": [
-        {
-          "field": "ImageURL",
-          "inferred_type": "image",
-          "pointer": "/ObjectStates/0/CustomImage/ImageURL"
-        }
-      ]
-    },
-    {
-      "cache_match": {
         "candidate_count": 2,
         "confidence": "none",
         "method": "ambiguous",
@@ -45,10 +25,30 @@
           "pointer": "/ObjectStates/2/MeshURL"
         }
       ]
+    },
+    {
+      "cache_match": {
+        "candidate_count": 1,
+        "confidence": "high",
+        "method": "steam_ugc_key",
+        "relative_path": "Images/cache-123ABCDEF.png"
+      },
+      "status": "cached",
+      "types": [
+        "image"
+      ],
+      "url": "https://example.invalid/ugc/123/ABCDEF/",
+      "usages": [
+        {
+          "field": "ImageURL",
+          "inferred_type": "image",
+          "pointer": "/ObjectStates/0/CustomImage/ImageURL"
+        }
+      ]
     }
   ],
   "save": {
-    "file": "synthetic.json",
+    "file": "synthetic_save.json",
     "name": "Synthetic Save"
   },
   "schema_version": 1,
