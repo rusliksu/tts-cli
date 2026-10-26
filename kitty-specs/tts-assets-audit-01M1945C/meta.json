@@ -9,6 +9,7 @@
   "purpose_context": "This mission advances tts assets audit on codex/tts-assets-audit so stakeholders can track the work from mission creation onward.",
   "purpose_tldr": "tts assets audit",
   "slug": "tts-assets-audit-01M1945C",
+  "status_phase": "1",
   "target_branch": "codex/tts-assets-audit",
   "topology": "single_branch"
 }

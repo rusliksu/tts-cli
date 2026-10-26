@@ -8,7 +8,6 @@
 .opencode/
 .windsurf/
 .gemini/
-.cursor/
 .qwen/
 .kilocode/
 .augment/
@@ -52,3 +51,9 @@ __pycache__/
 dist/
 build/
 *.egg-info/
+.kittify/.kitty.env
+.kittify/lint-report.json
+.cursor/rules/spec-kitty.mdc
+.cursor/commands/
+.cursor/skills/
+.worktrees/
